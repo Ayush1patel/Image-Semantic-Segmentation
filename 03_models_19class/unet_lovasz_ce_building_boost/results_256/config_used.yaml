@@ -1,0 +1,76 @@
+# UAVScenes vanilla-UNet — 19-class / 256x256 — CE + Lovasz-Softmax +
+# Building weight override + Building-aware weighted sampling
+#
+# Sibling of ../unet_lovasz_ce (the current best
+# checkpoint), identical in every respect except two deliberate additions
+# implementing the mentor's "adjust/increase weights of the required
+# classes and the sampling of these classes" suggestion:
+#
+#   1. class_weight_override: Building's CE weight is overridden (not
+#      multiplied) to 2.0. The auto median-frequency formula gives
+#      Building ~0.074 -- actively DOWN-weighted, since Building is
+#      common, not rare. 2.0 is a deliberate first value: well above
+#      neutral (1.0), modest relative to the 10x cap rare classes get.
+#   2. sampler: a WeightedRandomSampler over the training set, weight
+#      = 1 + building_alpha * (Building pixel fraction in that image),
+#      clipped at clip_max. Soft on purpose (every image keeps a weight-1
+#      floor) specifically to limit collateral risk to the already-fragile
+#      rare/site-exclusive classes (Bridge, Pool, Solar_Board, Container,
+#      Traffic_Barrier) -- see src/train.py for the exact mechanism.
+#      epoch_length_factor lengthens the epoch itself (more steps, not
+#      just reweighted ones) so other images aren't crowded out to make
+#      room for Building-rich ones.
+#
+#      Calibration note (scripts/sanity_check_sampler.py, run against the
+#      real training labels): Building pixel fraction per image tops out
+#      at 0.224 (no image is more than ~22% Building) with a long tail of
+#      zero-Building images (48%). An initial alpha=2.0 was checked first
+#      and produced max weight 1.45, mean 1.05 -- barely different from
+#      uniform, essentially inert. alpha=6.0 / clip_max=2.5 (analytically
+#      re-derived from the same measured fraction distribution, since the
+#      transform is linear and clipping never engages at these values)
+#      gives mean weight 1.163, median 1.008, p90 1.620, max 2.343, 0%
+#      clipped -- a real, bounded effect instead of a no-op.
+#
+# Architecture, optimizer, LR schedule, batch size, class taxonomy,
+# resolution, and train/val/test split are all unchanged.
+#
+# Time budget check (measured from the sibling run's own metrics.csv,
+# ~92.5s/epoch at the un-lengthened epoch size of 370 steps):
+#   epoch_length_factor 1.3 -> ~481 steps/epoch -> ~120s/epoch
+#   100 epochs (worst case, early-stop may cut it short like before)
+#   -> ~12,000s = ~200 min = ~3.3 hours, comfortably under the 4hr budget.
+
+data:
+  height: 256
+  width: 256
+  num_workers: 8       # ignored: cache_in_ram forces num_workers=0 (see train.py)
+  cache_in_ram: true    # ~4.2GB for train+val combined at 256x256, fits comfortably in RAM
+
+model:
+  encoder_name: resnet34
+  encoder_weights: imagenet
+
+train:
+  batch_size: 32
+  epochs: 100
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  lovasz_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  class_weight_override:
+    Building: 2.0
+  sampler:
+    enabled: true
+    building_alpha: 6.0
+    clip_max: 2.5
+    epoch_length_factor: 1.3
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10
+  results_dir: results_256

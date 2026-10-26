@@ -1,0 +1,34 @@
+# UAVScenes UPerNet+ResNet34 - 19-class / 256x256 variant
+# Architecture-only comparison against unet_dice_ce: same
+# class taxonomy (19 classes), same resolution, same optimizer, same batch
+# size, same loss, same split, same training hyperparameters. The ONLY
+# difference is the decoder - UPerNet (Xiao et al. 2018, the decoder used
+# in the UAVScenes paper's own segmentation benchmark) instead of a vanilla
+# UNet decoder. See src/model.py.
+
+data:
+  height: 256
+  width: 256
+  num_workers: 8       # ignored: cache_in_ram forces num_workers=0 (see train.py)
+  cache_in_ram: true    # ~4.2GB for train+val combined at 256x256, fits comfortably in RAM
+
+model:
+  encoder_name: resnet34
+  encoder_weights: imagenet
+
+train:
+  batch_size: 32
+  epochs: 100
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  dice_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10
+  results_dir: results_256

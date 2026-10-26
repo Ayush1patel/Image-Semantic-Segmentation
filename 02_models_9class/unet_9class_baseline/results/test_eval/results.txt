@@ -1,0 +1,17 @@
+Test Loss:       0.4322
+Pixel Accuracy:  0.9293
+Mean IoU:        0.7230  (excl. Background from means)
+Mean Precision:  0.7966  (excl. Background from means)
+Mean Recall:     0.8640  (excl. Background from means)
+Mean F1:         0.8259  (excl. Background from means)
+
+Class                  IoU   Precision    Recall      F1   Support(px)
+Building            0.7837      0.8336    0.9290  0.8787       2014093
+Road                0.8045      0.8710    0.9133  0.8917       3592647
+Water               0.8996      0.9252    0.9701  0.9471       2659602
+Vegetation          0.9372      0.9714    0.9637  0.9676      36968432
+Bridge              0.7023      0.8607    0.7923  0.8251          6409
+Container           0.7757      0.8087    0.9500  0.8737         95640
+Traffic_Barrier     0.4526      0.5233    0.7703  0.6232         80548
+Vehicle             0.4289      0.5789    0.6234  0.6003         88463
+Background          0.6513      0.8037    0.7745  0.7888       8315606

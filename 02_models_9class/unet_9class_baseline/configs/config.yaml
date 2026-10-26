@@ -1,0 +1,32 @@
+# UAVScenes vanilla-UNet — updated mapping config
+# Same architecture and infrastructure as unet_8class_ignore_background but with
+# the 9-class mapping from unet_9class_background_lidar_iou: Background is a real trainable
+# class (id 8) instead of an ignored bucket. IGNORE_INDEX=None means every
+# pixel is scored. Results are NOT comparable to the 8-class vanilla run.
+
+data:
+  height: 128
+  width: 128
+  num_workers: 8       # ignored: cache_in_ram forces num_workers=0 (see train.py)
+  cache_in_ram: false   # set true to pre-load all images into RAM (~1GB at 128x128, faster epochs)
+
+model:
+  encoder_name: resnet34
+  encoder_weights: imagenet
+
+train:
+  batch_size: 128
+  epochs: 70
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  dice_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10
+  results_dir: results

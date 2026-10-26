@@ -1,0 +1,34 @@
+# UAVScenes vanilla-UNet — updated mapping config, 256x256 variant
+# Matched-configuration run for a fair 9-class vs 19-class comparison
+# against unet_dice_ce/configs/config_256.yaml: identical
+# resolution, batch size, epoch budget, and every other hyperparameter.
+# The ONLY difference between the two runs is the class taxonomy (9
+# merged classes here vs 19 native classes there) - src/class_mapping.py
+# in this project is unchanged (still the 9-class merged mapping).
+
+data:
+  height: 256
+  width: 256
+  num_workers: 8       # ignored: cache_in_ram forces num_workers=0 (see train.py)
+  cache_in_ram: true    # ~4.2GB for train+val combined at 256x256, fits comfortably in RAM
+
+model:
+  encoder_name: resnet34
+  encoder_weights: imagenet
+
+train:
+  batch_size: 32
+  epochs: 100
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  dice_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10
+  results_dir: results_256

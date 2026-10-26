@@ -1,0 +1,42 @@
+# UAVScenes vanilla-UNet config - 9-class (+Background) variant, 512x512
+# Identical configuration to configs/config.yaml (same 9-class taxonomy with
+# Background as class 8 and nothing ignored, same vanilla UNet, same split,
+# same hyperparameters) except resolution: 512x512 instead of 128x128, and
+# results saved separately to results_512/ so they never overwrite the
+# 128x128 run.
+#
+# This is the preferred config for the LiDAR-restricted metrics: LiDAR
+# returns cover ~8.3% of pixels at 512x512, a genuinely selective subset,
+# against ~49% at 128x128.
+#
+# Benchmarked (pure GPU compute, batch 32): ~177.5s/epoch -> 70 epochs =
+# ~207 min (~3.5h) training alone; realistically ~4+ hours total once
+# RAM-cache build (~17GB, fits easily in system RAM) and per-epoch
+# validation are included. Peak VRAM ~8.9/20GB - safe.
+
+data:
+  height: 512
+  width: 512
+  num_workers: 8       # ignored: cache_in_ram forces num_workers=0 (see train.py)
+  cache_in_ram: true    # ~17GB for train+val combined at 512x512, fits comfortably in RAM
+
+model:
+  encoder_name: resnet34
+  encoder_weights: imagenet
+
+train:
+  batch_size: 32        # benchmarked: epoch time ~flat across batch sizes here (compute-bound), so pick for GPU utilization
+  epochs: 70
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  dice_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10
+  results_dir: results_512

@@ -1,0 +1,42 @@
+# UAVScenes UNet++ - FAST(er) config: full 50 epochs within a ~2-2.5 hour budget
+#
+# Trades some resolution for speed vs. configs/config.yaml (960x800, ~16h),
+# while still doing the full 50 epochs. Lower resolution disproportionately
+# hurts the rarest, smallest classes (Vehicle, Bridge, Traffic_Barrier,
+# Container - all <0.4% of pixels even at native resolution), so this is a
+# strong middle ground, not a replacement for the full-res run.
+#
+# Benchmarked end-to-end (RAM caching + real augmentation + GPU) on this
+# machine: 288x352, batch 32, 50 epochs -> ~7 min one-time RAM-cache build
+# + ~127 min training = ~134 min (~2.23h) total. Peak VRAM ~7.3/20GB.
+# (256x320 -> ~108 min/1.8h if you want more margin; 320x384 -> ~167 min/2.78h,
+# which exceeds the 2.5h cap regardless of batch size since this stage is
+# compute- not memory-bound.)
+
+data:
+  height: 288
+  width: 352
+  num_workers: 8       # ignored: cache_in_ram forces num_workers=0 (see train.py)
+  cache_in_ram: true    # decode+resize all images once into RAM; eliminates disk I/O per epoch
+
+model:
+  encoder_name: resnet34
+  encoder_weights: imagenet
+
+train:
+  batch_size: 32
+  epochs: 50                  # ~134 min total incl. ~7 min RAM-cache build, benchmarked
+  lr: 0.0003                   # scaled up for the larger batch size (32 vs 8 in config.yaml)
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  dice_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10
+  results_dir: results_fast      # everything (config_used.yaml, class_info.json, metrics.csv,
+                                   # checkpoints/, progress/, tensorboard/) goes under this folder

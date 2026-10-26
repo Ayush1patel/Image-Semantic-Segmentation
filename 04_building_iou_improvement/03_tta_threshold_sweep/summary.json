@@ -1,0 +1,36 @@
+{
+  "best_val": {
+    "iou": 0.8849699259979696,
+    "config": "flip_h",
+    "sigma": 0.5,
+    "threshold": 0.6
+  },
+  "per_sequence_test": {
+    "interval5_AMtown03": {
+      "base_iou": 0.8500431695832389,
+      "final_iou": 0.8624026312278245,
+      "n": 1120
+    },
+    "interval5_AMvalley03": {
+      "base_iou": 0.7306332540763895,
+      "final_iou": 0.7736336226825472,
+      "n": 961
+    },
+    "interval5_HKairport03": {
+      "base_iou": 0.8965011380564567,
+      "final_iou": 0.9164506465082346,
+      "n": 605
+    },
+    "interval5_HKisland03": {
+      "base_iou": 0.8696176714997249,
+      "final_iou": 0.874813507600854,
+      "n": 599
+    }
+  },
+  "per_image_test": {
+    "improved": 2091,
+    "worse": 199,
+    "unchanged": 995
+  },
+  "elapsed_seconds": 326.98324966430664
+}

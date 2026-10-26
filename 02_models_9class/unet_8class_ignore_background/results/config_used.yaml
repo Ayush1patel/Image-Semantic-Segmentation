@@ -1,0 +1,33 @@
+# UAVScenes vanilla-UNet config
+# Same train/val/test split and infrastructure as the unetpp_10class_merged
+# project, but: (1) 8-class taxonomy from "class distribution.txt" with a
+# true ignore_index for background/unnamed ids, (2) fixed 128x128
+# resolution for both training and evaluation/metrics, (3) plain UNet
+# (no nested/dense skip pathways) instead of UNet++.
+
+data:
+  height: 128
+  width: 128
+  num_workers: 8       # ignored: cache_in_ram forces num_workers=0 (see train.py)
+  cache_in_ram: true    # trivial at this resolution (~1GB total for train+val)
+
+model:
+  encoder_name: resnet34
+  encoder_weights: imagenet
+
+train:
+  batch_size: 128       # benchmarked ~9.6 min/50-epochs pure compute at 128x128, peak VRAM ~2.5/20GB
+  epochs: 70
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  dice_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10
+  results_dir: results

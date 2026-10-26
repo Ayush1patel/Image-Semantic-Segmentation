@@ -1,0 +1,28 @@
+# UAVScenes UNet++ semantic segmentation config
+
+data:
+  height: 800
+  width: 960          # matches native 2448x2048 aspect ratio (1.2); benchmarked at 13.4GB/20GB peak VRAM
+  num_workers: 8
+
+model:
+  encoder_name: resnet34     # try resnet50 / timm-efficientnet-b3 for higher mIoU if VRAM/time allow
+  encoder_weights: imagenet
+
+train:
+  batch_size: 8               # ~19 min/epoch on RTX 4000 Ada (benchmarked), safe VRAM headroom
+  epochs: 50
+  lr: 0.0001
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  dice_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10        # fixed val samples visualized every epoch
+  results_dir: results           # everything (config_used.yaml, class_info.json, metrics.csv,
+                                   # checkpoints/, progress/, tensorboard/) goes under this folder

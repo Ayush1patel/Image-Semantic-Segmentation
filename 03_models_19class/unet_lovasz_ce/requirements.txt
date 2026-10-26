@@ -1,0 +1,10 @@
+# torch/torchvision installed separately with the CUDA-enabled index (see README)
+segmentation-models-pytorch>=0.3.4
+albumentations>=1.4.0
+opencv-python-headless>=4.9.0
+numpy>=1.26,<2.0
+pillow>=10.0
+pyyaml>=6.0
+tqdm>=4.66
+tensorboard>=2.16
+matplotlib>=3.8

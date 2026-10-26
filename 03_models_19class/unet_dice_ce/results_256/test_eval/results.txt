@@ -1,0 +1,27 @@
+Test Loss:       0.4915
+Pixel Accuracy:  0.9428
+Mean IoU:        0.8055  (excl. Background from means)
+Mean Precision:  0.8717  (excl. Background from means)
+Mean Recall:     0.9031  (excl. Background from means)
+Mean F1:         0.8857  (excl. Background from means)
+
+Class                  IoU   Precision    Recall      F1   Support(px)
+Background          0.7201      0.8677    0.8089  0.8373      33160845
+Building            0.8424      0.8803    0.9513  0.9144       7836972
+Dirt_Motor_Road     0.7932      0.8419    0.9321  0.8847       4692014
+Paved_Motor_Road    0.8602      0.9011    0.9499  0.9248       3104198
+River               0.9101      0.9330    0.9738  0.9529      10584975
+Pool                0.8891      0.9505    0.9323  0.9413         36549
+Bridge              0.8004      0.8818    0.8966  0.8891         25645
+Container           0.8373      0.8651    0.9631  0.9115        380337
+Airstrip            0.9606      0.9752    0.9846  0.9799       3728664
+Traffic_Barrier     0.5345      0.6041    0.8227  0.6967        322123
+Green_Field         0.9289      0.9652    0.9611  0.9632      79719857
+Wild_Field          0.9563      0.9722    0.9832  0.9777      68153361
+Solar_Board         0.8359      0.9470    0.8769  0.9106        102116
+Umbrella            0.7295      0.8517    0.8357  0.8436         18252
+Transparent_Roof    0.8727      0.9230    0.9412  0.9320        217208
+Car_Park            0.8359      0.8790    0.9446  0.9106        278756
+Paved_Walk          0.8181      0.9358    0.8668  0.9000       2570014
+Sedan               0.6058      0.7209    0.7915  0.7545        319210
+Truck               0.4875      0.6628    0.6482  0.6554         34664

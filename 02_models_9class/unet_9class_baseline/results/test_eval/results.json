@@ -1,0 +1,75 @@
+{
+  "checkpoint": "E:\\Multimodal\\NamanAyush\\uavscenes_unet_vanilla_updated_mapping\\src\\..\\results\\checkpoints\\best.pt",
+  "checkpoint_epoch": 67,
+  "test_loss": 0.43217762445028013,
+  "pixel_accuracy": 0.9292536951816971,
+  "mean_iou": 0.7230475847574851,
+  "mean_precision": 0.7966009114786785,
+  "mean_recall": 0.8640229513612204,
+  "mean_f1": 0.8259193160028628,
+  "per_class": {
+    "Building": {
+      "iou": 0.783687560053513,
+      "precision": 0.8336461889903621,
+      "recall": 0.9289630617851311,
+      "f1": 0.8787273932997565,
+      "support_pixels": 2014093
+    },
+    "Road": {
+      "iou": 0.8045111841735858,
+      "precision": 0.8710466472659234,
+      "recall": 0.9132864987848792,
+      "f1": 0.8916666089182802,
+      "support_pixels": 3592647
+    },
+    "Water": {
+      "iou": 0.899550993824509,
+      "precision": 0.9252256481298523,
+      "recall": 0.9700748457851964,
+      "f1": 0.9471196053688197,
+      "support_pixels": 2659602
+    },
+    "Vegetation": {
+      "iou": 0.9371665432517262,
+      "precision": 0.9714173878790835,
+      "recall": 0.9637415511699279,
+      "f1": 0.9675642463642793,
+      "support_pixels": 36968432
+    },
+    "Bridge": {
+      "iou": 0.7022541833771263,
+      "precision": 0.8606779661016949,
+      "recall": 0.7923232953658917,
+      "f1": 0.8250873344707126,
+      "support_pixels": 6409
+    },
+    "Container": {
+      "iou": 0.7756511494890685,
+      "precision": 0.8086562594563805,
+      "recall": 0.9500104558762025,
+      "f1": 0.8736526312753007,
+      "support_pixels": 95640
+    },
+    "Traffic_Barrier": {
+      "iou": 0.4526487795625976,
+      "precision": 0.5232577750792687,
+      "recall": 0.7703481154094453,
+      "f1": 0.6232047084346062,
+      "support_pixels": 80548
+    },
+    "Vehicle": {
+      "iou": 0.42891028432775463,
+      "precision": 0.578879418926862,
+      "recall": 0.6234357867130891,
+      "f1": 0.6003319998911476,
+      "support_pixels": 88463
+    },
+    "Background": {
+      "iou": 0.6513178306803182,
+      "precision": 0.8037290538819571,
+      "recall": 0.7745043476085808,
+      "f1": 0.7888461186323956,
+      "support_pixels": 8315606
+    }
+  }
+}

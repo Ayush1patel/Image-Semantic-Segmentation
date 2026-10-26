@@ -1,0 +1,36 @@
+# UAVScenes vanilla-UNet — 19-class / 256x256 variant
+# Same architecture, loss, optimizer, split, and training hyperparameters as
+# unet_9class_baseline/configs/config_512.yaml. Two
+# deliberate changes only:
+#   1. Class taxonomy: all 19 classes named in the UAVScenes paper are kept
+#      as separate trainable classes (not merged into 9 semantic groups) -
+#      only the 7 unnamed/reserved raw ids are folded into Background.
+#      See src/class_mapping.py.
+#   2. Resolution: 256x256 instead of 512x512.
+
+data:
+  height: 256
+  width: 256
+  num_workers: 8       # ignored: cache_in_ram forces num_workers=0 (see train.py)
+  cache_in_ram: true    # ~4.2GB for train+val combined at 256x256, fits comfortably in RAM
+
+model:
+  encoder_name: resnet34
+  encoder_weights: imagenet
+
+train:
+  batch_size: 32
+  epochs: 100
+  lr: 0.0003
+  weight_decay: 0.0001
+  warmup_epochs: 3
+  dice_weight: 0.5
+  ce_weight: 0.5
+  class_weight_clip_max: 10.0
+  grad_clip_norm: 5.0
+  amp: true
+  early_stop_patience: 15
+  val_every: 1
+  seed: 42
+  num_progress_images: 10
+  results_dir: results_256
